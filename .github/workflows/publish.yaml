@@ -1,0 +1,46 @@
+name: Publish
+on:
+  workflow_call:
+    inputs:
+      app_version:
+        required: true
+        type: string
+        description: The app version to be published.
+    secrets:
+      username:
+        required: true
+        description: The github username.
+      password:
+        required: true
+        description: The github password/token.
+permissions:
+  contents: read
+  packages: write
+jobs:
+  publish:
+    name: Publishing
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Enable docker cache
+        uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
+        with:
+          key: ${{ github.repository }}-docker-cache-{hash}
+          restore-keys: |
+            ${{ github.repository }}-docker-cache-
+      - name: Login into docker
+        uses: azure/docker-login@v1
+        with:
+          login-server: ghcr.io
+          username: ${{ secrets.username }}
+          password: ${{ secrets.password }}
+      - name: Build and publish
+        env:
+          VERSION_APP: ${{ inputs.app_version }}
+          GITHUB_TOKEN: ${{ secrets.password }}
+          DOCKER_USERNAME: ${{ secrets.username }}
+          DOCKER_PASSWORD: ${{ secrets.password }}
+          IMAGE_BUILDER_CMD_EXTRA_ARGS: --no-cache
+        run: make publish

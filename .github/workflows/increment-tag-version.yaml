@@ -1,0 +1,28 @@
+name: Increment tag version
+on:
+  workflow_call: {}
+permissions:
+  contents: write
+  packages: write
+jobs:
+  increment-tag-version:
+    runs-on: ubuntu-20.04
+    outputs:
+      latest_tag_sha: ${{ steps.verify.outputs.latest_tag_sha }}
+      new_tag_name: ${{ steps.verify.outputs.new_tag_name }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Get latest tag
+        id: get_latest_tag
+        run: |
+          git fetch --unshallow --tags
+          echo "::set-output name=latest_tag::$(git describe --tags --abbrev=0 || echo "")"
+      - name: Get latest tag sha
+        if: ${{ steps.get_latest_tag.outputs.latest_tag != '' }}
+        id: get_latest_tag_sha
+        run: echo "::set-output name=latest_tag_sha::$(git rev-list -n 1 "${{ steps.get_latest_tag.outputs.latest_tag }}")"
+      - name: Increment tag version number
+        if: ${{ steps.get_latest_tag.outputs.latest_tag != '' }}
+        id: new_tag_name
+        run: echo "::set-output name=new_tag_name::$(echo "${{ steps.get_latest_tag.outputs.latest_tag }}" | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')"
