@@ -2,7 +2,7 @@ name: Merge dependabot pr
 on:
   workflow_call:
     secrets:
-      github_token:
+      ext_github_token:
         required: true
         description: The github token used to merge the pr.
 permissions:
@@ -17,4 +17,4 @@ jobs:
         run: gh pr merge --auto --merge "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
-          GITHUB_TOKEN: ${{ secrets.github_token }}
+          GITHUB_TOKEN: ${{ secrets.ext_github_token }}
