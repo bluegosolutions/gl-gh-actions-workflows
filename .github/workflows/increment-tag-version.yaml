@@ -8,8 +8,8 @@ jobs:
   increment-tag-version:
     runs-on: ubuntu-20.04
     outputs:
-      latest_tag_sha: ${{ steps.verify.outputs.latest_tag_sha }}
-      new_tag_name: ${{ steps.verify.outputs.new_tag_name }}
+      latest_tag_sha: ${{ steps.get_latest_tag_sha.outputs.latest_tag_sha }}
+      new_tag_name: ${{ steps.new_tag_name.outputs.new_tag_name }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
