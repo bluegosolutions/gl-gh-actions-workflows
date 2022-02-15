@@ -9,7 +9,7 @@ jobs:
   call-increment-tag-version:
     uses: ./.github/workflows/increment-tag-version.yaml
   call-test:
-    if: ${{ (needs.call-increment-tag-version.outputs.latest_tag_sha != '') && (github.sha != needs.call-increment-tag-version.outputs.latest_tag_sha) }}
+    if: ${{ needs.call-increment-tag-version.outputs.latest_tag_sha && (github.sha != needs.call-increment-tag-version.outputs.latest_tag_sha) }}
     needs: [ call-increment-tag-version ]
     uses: ./.github/workflows/test.yaml
     secrets:
