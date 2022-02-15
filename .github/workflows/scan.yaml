@@ -21,7 +21,7 @@ jobs:
         id: get_latest_tag
         continue-on-error: true
         env:
-          GITHUB_TOKEN: ${{ secrets.password }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: echo "::set-output name=latest_tag::$(gh release list -L 1 | cut -f3)"
   scan:
     name: Scan

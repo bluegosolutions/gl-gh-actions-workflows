@@ -5,24 +5,31 @@ permissions:
   contents: write
   packages: write
 jobs:
-  increment-tag-version:
+  get-latest-tag:
+    name: Get latest tag
     runs-on: ubuntu-20.04
     outputs:
-      latest_tag_sha: ${{ steps.get_latest_tag_sha.outputs.latest_tag_sha }}
-      new_tag_name: ${{ steps.new_tag_name.outputs.new_tag_name }}
+      latest_tag: ${{ steps.get_latest_tag.outputs.latest_tag }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
       - name: Get latest tag
         id: get_latest_tag
-        run: |
-          git fetch --unshallow --tags
-          echo "::set-output name=latest_tag::$(git describe --tags --abbrev=0 || echo "")"
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "::set-output name=latest_tag::$(gh release list -L 1 | cut -f3)"
+  increment-tag-version:
+    runs-on: ubuntu-20.04
+    needs: [ get-latest-tag ]
+    if: ${{ needs.get-latest-tag.outputs.latest_tag }}
+    outputs:
+      latest_tag_sha: ${{ steps.get_latest_tag_sha.outputs.latest_tag_sha }}
+      new_tag_name: ${{ steps.new_tag_name.outputs.new_tag_name }}
+    steps:
       - name: Get latest tag sha
-        if: ${{ steps.get_latest_tag.outputs.latest_tag != '' }}
         id: get_latest_tag_sha
-        run: echo "::set-output name=latest_tag_sha::$(git rev-list -n 1 "${{ steps.get_latest_tag.outputs.latest_tag }}")"
+        run: echo "::set-output name=latest_tag_sha::$(git rev-list -n 1 "${{ needs.get-latest-tag.outputs.latest_tag }}")"
       - name: Increment tag version number
-        if: ${{ steps.get_latest_tag.outputs.latest_tag != '' }}
         id: new_tag_name
-        run: echo "::set-output name=new_tag_name::$(echo "${{ steps.get_latest_tag.outputs.latest_tag }}" | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')"
+        run: echo "::set-output name=new_tag_name::$(echo "${{ needs.get-latest-tag.outputs.latest_tag }}" | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')"
