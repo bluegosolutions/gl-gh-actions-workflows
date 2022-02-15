@@ -1,5 +1,5 @@
 # gl-gh-actions-workflows
-### Defines reusable [github actions](https://docs.github.com/en/actions) workflows.
+Defines reusable [github actions](https://docs.github.com/en/actions) workflows.
 
 A guide for the integration of reusable github actions can be found [here](https://docs.github.com/en/actions/using-workflows/reusing-workflows).
 
