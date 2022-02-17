@@ -2,12 +2,12 @@ name: Scan
 on:
   workflow_call:
     inputs:
-      maximizeDiskSpace:
+      maximize_disk_space:
         required: false
         description: Whether to maximize the disk space by deleting unused files.
         type: boolean
         default: false
-      disableDockerCache:
+      disable_docker_cache:
         required: false
         description: Whether to disable the docker cache or not.
         type: boolean
@@ -41,7 +41,7 @@ jobs:
     if: ${{ needs.get-latest-tag.outputs.latest_tag }}
     steps:
       - name: Maximize build space
-        if: ${{ inputs.maximizeDiskSpace }}
+        if: ${{ inputs.maximize_disk_space }}
         uses: easimon/maximize-build-space@v5
         with:
           remove-dotnet: 'true'
@@ -50,7 +50,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
       - name: Enable docker cache
-        if: ${{ !inputs.disableDockerCache }}
+        if: ${{ !inputs.disable_docker_cache }}
         uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
         with:
