@@ -1,4 +1,4 @@
-name: Merge dependabot pr
+name: Merge prs automatically
 on:
   workflow_call:
     secrets:
@@ -11,7 +11,7 @@ permissions:
 jobs:
   merge-pr:
     runs-on: ubuntu-20.04
-    if: ${{ github.actor == 'dependabot[bot]' }}
+    if: ${{ contains(fromJSON('["dependabot[bot]", "renovate[bot]"]'), github.actor)  }}
     steps:
       - name: Enable auto-merge for Dependabot PRs
         run: gh pr merge --auto --merge "$PR_URL"
