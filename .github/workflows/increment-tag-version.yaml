@@ -27,6 +27,10 @@ jobs:
       latest_tag_sha: ${{ steps.get_latest_tag_sha.outputs.latest_tag_sha }}
       new_tag_name: ${{ steps.new_tag_name.outputs.new_tag_name }}
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Git unshallow tags
+        run: git fetch --unshallow --tags
       - name: Get latest tag sha
         id: get_latest_tag_sha
         run: echo "::set-output name=latest_tag_sha::$(git rev-list -n 1 "${{ needs.get-latest-tag.outputs.latest_tag }}")"
