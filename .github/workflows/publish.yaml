@@ -52,6 +52,8 @@ jobs:
           password: ${{ secrets.password }}
       - name: Checkout repo
         uses: actions/checkout@v2
+      - name: Switch docker driver
+        run: docker buildx create --use
       - name: Build and publish
         env:
           VERSION_APP: ${{ inputs.app_version }}
