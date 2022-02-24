@@ -7,6 +7,11 @@ on:
         description: Whether to disable the docker cache or not.
         type: boolean
         default: false
+      disable_qemu:
+        required: false
+        description: Whether to disable the static qemu binaries or not (required for docker multiplatform building).
+        type: boolean
+        default: false
     secrets:
       username:
         required: true
@@ -29,6 +34,9 @@ jobs:
           key: ${{ github.repository }}-docker-cache-{hash}
           restore-keys: |
             ${{ github.repository }}-docker-cache-
+      - name: Set up QEMU
+        if: ${{ !inputs.disable_qemu }}
+        uses: docker/setup-qemu-action@v1
       - name: Login into docker
         uses: azure/docker-login@v1
         with:
