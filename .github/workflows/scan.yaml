@@ -2,9 +2,9 @@ name: Scan
 on:
   workflow_call:
     inputs:
-      disable_docker_cache:
+      enable_docker_cache:
         required: false
-        description: Whether to disable the docker cache or not.
+        description: Whether to enable the docker cache or not.
         type: boolean
         default: false
     secrets:
@@ -36,7 +36,7 @@ jobs:
     if: ${{ needs.get-latest-tag.outputs.latest_tag }}
     steps:
       - name: Enable docker cache
-        if: ${{ !inputs.disable_docker_cache }}
+        if: ${{ inputs.enable_docker_cache }}
         uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
         with:
