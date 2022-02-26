@@ -1,6 +1,15 @@
 name: Increment tag version
 on:
-  workflow_call: {}
+  workflow_call:
+    outputs:
+      latest_tag_sha:
+        description: The commit sha of the latest tag. Empty, if no tag has been published.
+        value: ${{ jobs.increment-tag-version.outputs.latest_tag_sha }}
+      new_tag_name:
+        description: |
+          The new tag name created by incrementing the latest tag's patch version (semver).
+          Empty, if no tag has been published.
+        value: ${{ jobs.increment-tag-version.outputs.new_tag_name }}
 permissions:
   contents: write
   packages: write
