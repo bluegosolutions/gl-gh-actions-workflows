@@ -42,7 +42,7 @@ jobs:
           username: ${{ secrets.username }}
           password: ${{ secrets.password }}
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Make all
         env:
           GITHUB_TOKEN: ${{ secrets.password }}
