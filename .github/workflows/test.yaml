@@ -26,7 +26,7 @@ jobs:
     steps:
       - name: Set up QEMU
         if: ${{ inputs.enable_qemu }}
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v2
       - name: Enable docker cache
         if: ${{ inputs.enable_docker_cache }}
         uses: satackey/action-docker-layer-caching@v0.0.11
