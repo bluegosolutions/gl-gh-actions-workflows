@@ -26,3 +26,6 @@ Executes a `Makefile` located at the project's root by calling `make scan`.
 
 - `test.yaml`\
 Executes a `Makefile` located at the project's root by calling `make`.
+
+- `create-release.yaml`\
+  Creates a GitHub release and sends slack messages describe the workflow's state.

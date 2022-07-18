@@ -1,6 +1,16 @@
 name: Increment tag version
 on:
   workflow_call:
+    inputs:
+      disable_slack:
+        type: boolean
+        default: false
+        required: false
+        description: Whether to send slack message describing this workflow's status or not.
+    secrets:
+      slack_bot_token:
+        description: The slack bot token used to send slack messages describing this workflow's states.
+        required: false
     outputs:
       latest_tag_sha:
         description: The commit sha of the latest tag. Empty, if no tag has been published.
@@ -30,12 +40,12 @@ jobs:
         run: echo "::set-output name=latest_tag::$(gh release list -L 1 | cut -f3)"
       - name: Slack Notification
         uses: slackapi/slack-github-action@v1.19.0
-        if: ${{ failure() }}
+        if: !${{ inputs.disable_slack }} && ${{ failure() }}
         with:
           channel-id: "C03PH5M17KR"
-          slack-message: "Failed ${{ github.job }}\nSee: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          slack-message: "${{ github.workflow }}\nFAILED: ${{ github.job }}\nSee: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN_GITHUB_ACTIONS }}
+          SLACK_BOT_TOKEN: ${{ secrets.slack_bot_token }}
   increment-tag-version:
     runs-on: ubuntu-20.04
     needs: [ get-latest-tag ]
@@ -54,3 +64,11 @@ jobs:
       - name: Increment tag version number
         id: new_tag_name
         run: echo "::set-output name=new_tag_name::$(echo "${{ needs.get-latest-tag.outputs.latest_tag }}" | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')"
+      - name: Slack Notification
+        uses: slackapi/slack-github-action@v1.19.0
+        if: !${{ inputs.disable_slack }} && ${{ failure() }}
+        with:
+          channel-id: "C03PH5M17KR"
+          slack-message: "${{ github.workflow }}\nFAILED: ${{ github.job }}\nSee: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.slack_bot_token }}

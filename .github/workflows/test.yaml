@@ -12,6 +12,11 @@ on:
         description: Whether to enable the static qemu binaries or not (required for docker multiplatform building).
         type: boolean
         default: false
+      disable_slack:
+        type: boolean
+        default: false
+        required: false
+        description: Whether to send slack message describing this workflow's status or not.
     secrets:
       username:
         required: true
@@ -19,6 +24,9 @@ on:
       password:
         required: true
         description: The github password/token.
+      slack_bot_token:
+        description: The slack bot token used to send slack messages describing this workflow's states.
+        required: false
 jobs:
   test:
     name: Testing
@@ -50,3 +58,11 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.password }}
           IMAGE_BUILDER_CMD_EXTRA_ARGS: --no-cache
         run: make
+      - name: Slack Notification
+        uses: slackapi/slack-github-action@v1.19.0
+        if: !${{ inputs.disable_slack }} && ${{ failure() }}
+        with:
+          channel-id: "C03PH5M17KR"
+          slack-message: "${{ github.workflow }}\nFAILED: ${{ github.job }}\nSee: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.slack_bot_token }}

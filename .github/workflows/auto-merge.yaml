@@ -9,8 +9,10 @@ jobs:
     secrets:
       username: ${{ secrets.IMAGE_GITHUB_USERNAME }}
       password: ${{ secrets.IMAGE_GITHUB_PASSWORD }}
+      slack_bot_token: ${{ secrets.SLACK_BOT_TOKEN_GITHUB_ACTIONS }}
   call-merge-pr:
     uses: ./.github/workflows/merge-pr.yaml
     needs: [ call-test ]
     secrets:
       ext_github_token: ${{ secrets.GITHUB_TOKEN }}
+      slack_bot_token: ${{ secrets.SLACK_BOT_TOKEN_GITHUB_ACTIONS }}

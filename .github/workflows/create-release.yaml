@@ -1,32 +1,35 @@
-name: Merge prs automatically
+name: Scan
 on:
   workflow_call:
     inputs:
+      tag_name:
+        type: string
+        required: true
+        description: The tag name used for the GitHub release.
+      target_commit_hash:
+        type: string
+        required: true
+        description: The commit hash on which the GitHub release is performed.
       disable_slack:
         type: boolean
         default: false
         required: false
         description: Whether to send slack message describing this workflow's status or not.
     secrets:
-      ext_github_token:
-        required: true
-        description: The github token used to merge the pr.
       slack_bot_token:
         description: The slack bot token used to send slack messages describing this workflow's states.
         required: false
-permissions:
-  pull-requests: write
-  contents: write
 jobs:
-  merge-pr:
+  create-release:
+    name: Get latest tag
     runs-on: ubuntu-20.04
-    if: ${{ contains(fromJSON('["dependabot[bot]", "renovate[bot]"]'), github.actor)  }}
     steps:
-      - name: Enable auto-merge for Dependabot PRs
-        run: gh pr merge --auto --merge "$PR_URL"
-        env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          GITHUB_TOKEN: ${{ secrets.ext_github_token }}
+      - name: Create github release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ input.tag_name }}
+          target_commitish: ${{ input.target_commit_hash }}
+          generate_release_notes: true
       - name: Slack Notification
         uses: slackapi/slack-github-action@v1.19.0
         if: !${{ inputs.disable_slack }} && ${{ failure() }}
