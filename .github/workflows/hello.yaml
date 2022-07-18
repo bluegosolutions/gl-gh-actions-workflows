@@ -20,3 +20,10 @@ jobs:
         run: echo Foo
       - name: Bar
         run: echo Bar
+  catch-job:
+    name: First Job
+    runs-on: ubuntu-20.04
+    if: ${{ failure() }}
+    steps:
+      - name: Done
+        run: echo Done
