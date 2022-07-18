@@ -23,6 +23,9 @@ jobs:
   catch-job:
     name: First Job
     runs-on: ubuntu-20.04
+    needs:
+      - first-job
+      - second-job
     if: ${{ failure() }}
     steps:
       - name: Done
