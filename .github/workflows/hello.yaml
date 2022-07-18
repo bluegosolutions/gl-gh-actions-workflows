@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Hello
-        run: echo Hello
+        run: exit 1
       - name: World
         run: echo World
   second-job:
