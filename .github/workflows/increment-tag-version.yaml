@@ -40,7 +40,7 @@ jobs:
         run: echo "::set-output name=latest_tag::$(gh release list -L 1 | cut -f3)"
       - name: Slack Notification
         uses: slackapi/slack-github-action@v1.19.0
-        if: !${{ inputs.disable_slack }} && ${{ failure() }}
+        if: ${{ ! inputs.disable_slack }} && ${{ failure() }}
         with:
           channel-id: "C03PH5M17KR"
           slack-message: "${{ github.workflow }}\nFAILED: ${{ github.job }}\nSee: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
@@ -66,7 +66,7 @@ jobs:
         run: echo "::set-output name=new_tag_name::$(echo "${{ needs.get-latest-tag.outputs.latest_tag }}" | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')"
       - name: Slack Notification
         uses: slackapi/slack-github-action@v1.19.0
-        if: !${{ inputs.disable_slack }} && ${{ failure() }}
+        if: ${{ ! inputs.disable_slack }} && ${{ failure() }}
         with:
           channel-id: "C03PH5M17KR"
           slack-message: "${{ github.workflow }}\nFAILED: ${{ github.job }}\nSee: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
