@@ -2,36 +2,28 @@ name: Hello
 on:
   push: {}
 jobs:
-#  first-job:
-#    name: First Job
-#    runs-on: ubuntu-20.04
-#    steps:
-#      - name: Hello
-#        run: echo Hello
-#      - name: World
-#        run: echo World
-#  second-job:
-#    name: First Job
-#    runs-on: ubuntu-20.04
-#    needs:
-#      - first-job
-#    steps:
-#      - name: Foo
-#        run: exit 1
-#      - name: Bar
-#        run: echo Bar
-  catch-job:
-    name: First Job
+  call-test:
     runs-on: ubuntu-20.04
-#    needs:
-#      - first-job
-#      - second-job
-#    if: ${{ failure() }}
     steps:
+      - run: echo test
       - name: Slack Notification
         uses: slackapi/slack-github-action@v1.19.0
+        if: ${{ failure() }}
         with:
           channel-id: "C03PH5M17KR"
-          slack-message: "Hello World!"
+          slack-message: "Failed test: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN_GITHUB_ACTIONS }}
+  call-merge-pr:
+    runs-on: ubuntu-20.04
+    needs: [ call-test ]
+    steps:
+      - run: echo call-merge-pr
+      - name: Slack Notification
+        uses: slackapi/slack-github-action@v1.19.0
+        if: ${{ failure() }}
+        with:
+          channel-id: "C03PH5M17KR"
+          slack-message: "Failed merging PR: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN_GITHUB_ACTIONS }}
