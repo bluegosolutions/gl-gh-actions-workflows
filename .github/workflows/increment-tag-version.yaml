@@ -28,6 +28,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: echo "::set-output name=latest_tag::$(gh release list -L 1 | cut -f3)"
+      - name: Slack Notification
+        uses: slackapi/slack-github-action@v1.19.0
+        if: ${{ failure() }}
+        with:
+          channel-id: "C03PH5M17KR"
+          slack-message: "Failed ${{ github.job }}\nSee: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN_GITHUB_ACTIONS }}
   increment-tag-version:
     runs-on: ubuntu-20.04
     needs: [ get-latest-tag ]

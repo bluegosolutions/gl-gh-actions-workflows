@@ -12,7 +12,7 @@ jobs:
         if: ${{ failure() }}
         with:
           channel-id: "C03PH5M17KR"
-          slack-message: "Failed test\nSee: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          slack-message: "Failed ${{ github.job }}\nSee: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN_GITHUB_ACTIONS }}
   call-merge-pr:
@@ -25,6 +25,6 @@ jobs:
         if: ${{ failure() }}
         with:
           channel-id: "C03PH5M17KR"
-          slack-message: "Failed merging PR: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+          slack-message: "Failed ${{ github.job }}\nSee: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN_GITHUB_ACTIONS }}
