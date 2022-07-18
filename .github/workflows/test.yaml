@@ -26,7 +26,7 @@ jobs:
     steps:
       - name: Set up QEMU
         if: ${{ inputs.enable_qemu }}
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v2
       - name: Enable docker cache
         if: ${{ inputs.enable_docker_cache }}
         uses: satackey/action-docker-layer-caching@v0.0.11
@@ -42,7 +42,7 @@ jobs:
           username: ${{ secrets.username }}
           password: ${{ secrets.password }}
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Make all
         env:
           GITHUB_TOKEN: ${{ secrets.password }}

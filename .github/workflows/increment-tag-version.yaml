@@ -21,7 +21,7 @@ jobs:
       latest_tag: ${{ steps.get_latest_tag.outputs.latest_tag }}
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Get latest tag
         id: get_latest_tag
         continue-on-error: true
@@ -37,7 +37,7 @@ jobs:
       new_tag_name: ${{ steps.new_tag_name.outputs.new_tag_name }}
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Git unshallow tags
         run: git fetch --unshallow --tags
       - name: Get latest tag sha
