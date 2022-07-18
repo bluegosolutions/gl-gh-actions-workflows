@@ -17,7 +17,7 @@ jobs:
       - first-job
     steps:
       - name: Foo
-        run: echo Foo
+        run: exit 1
       - name: Bar
         run: echo Bar
   catch-job:
