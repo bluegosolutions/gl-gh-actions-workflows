@@ -2,31 +2,31 @@ name: Hello
 on:
   push: {}
 jobs:
-  first-job:
-    name: First Job
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Hello
-        run: echo Hello
-      - name: World
-        run: echo World
-  second-job:
-    name: First Job
-    runs-on: ubuntu-20.04
-    needs:
-      - first-job
-    steps:
-      - name: Foo
-        run: exit 1
-      - name: Bar
-        run: echo Bar
+#  first-job:
+#    name: First Job
+#    runs-on: ubuntu-20.04
+#    steps:
+#      - name: Hello
+#        run: echo Hello
+#      - name: World
+#        run: echo World
+#  second-job:
+#    name: First Job
+#    runs-on: ubuntu-20.04
+#    needs:
+#      - first-job
+#    steps:
+#      - name: Foo
+#        run: exit 1
+#      - name: Bar
+#        run: echo Bar
   catch-job:
     name: First Job
     runs-on: ubuntu-20.04
-    needs:
-      - first-job
-      - second-job
-    if: ${{ failure() }}
+#    needs:
+#      - first-job
+#      - second-job
+#    if: ${{ failure() }}
     steps:
       - name: Slack Notification
         uses: slackapi/slack-github-action@v1.19.0
