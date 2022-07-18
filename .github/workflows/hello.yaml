@@ -13,6 +13,8 @@ jobs:
   second-job:
     name: First Job
     runs-on: ubuntu-20.04
+    needs:
+      - first-job
     steps:
       - name: Foo
         run: echo Foo
