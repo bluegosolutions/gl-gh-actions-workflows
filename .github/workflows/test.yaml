@@ -84,7 +84,7 @@ jobs:
         uses: slackapi/slack-github-action@v1.19.0
         if: ${{ ! inputs.disable_slack && failure() }}
         with:
-          channel-id: ${{ input.slack_channel_id }}
-          payload: ${{ input.slack_failure_payload }}
+          channel-id: ${{ inputs.slack_channel_id }}
+          payload: ${{ inputs.slack_failure_payload }}
         env:
           SLACK_BOT_TOKEN: ${{ secrets.slack_bot_token }}
