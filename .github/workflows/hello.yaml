@@ -46,13 +46,14 @@ jobs:
           channel-id: "C03PH5M17KR"
           payload: |
             {
-              "text": "${{ github.repository }}: The job ${{ github.job }} of the workflow ${{ github.workflow }} failed.",
+              "text": "*${{ github.repository }}*: The job *${{ github.job }}* of the workflow *${{ github.workflow }}* failed.",
               "attachments": [
                 {
                   "color": "#F44336",
                   "title": "${{ github.repository }}",
                   "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-                  "text": "The job ${{ github.job }} of the workflow ${{ github.workflow }} failed."
+                  "text": "The job *${{ github.job }}* of the workflow *${{ github.workflow }}* failed.",
+                  "markdown_in": ["text"]
                 }
               ]
             }
