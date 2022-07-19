@@ -17,6 +17,11 @@ on:
         default: false
         required: false
         description: Whether to send slack message describing this workflow's status or not.
+      slack_channel_id:
+        type: string
+        default: "C03PH5M17KR"
+        required: false
+        description: The slack channel id to send messages describing this workflow's status.
     secrets:
       username:
         required: true
@@ -60,9 +65,9 @@ jobs:
         run: make
       - name: Slack Notification
         uses: slackapi/slack-github-action@v1.19.0
-        if: ${{ ! inputs.disable_slack }} && ${{ failure() }}
+        if: ${{ ! inputs.disable_slack && failure() }}
         with:
-          channel-id: "C03PH5M17KR"
+          channel-id: ${{ input.slack_channel_id }}
           slack-message: "${{ github.workflow }}\nFAILED: ${{ github.job }}\nSee: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.slack_bot_token }}
