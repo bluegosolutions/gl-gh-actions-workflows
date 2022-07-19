@@ -22,23 +22,6 @@ on:
         default: "C03PH5M17KR"
         required: false
         description: The slack channel id to send messages describing this workflow's status.
-      slack_failure_payload:
-        type: string
-        required: false
-        description: The failure payload used to send as slack message describing this workflow's status.
-        default: |
-          {
-            "text": "*${{ '${{ github.repository }}' }}*: The job *${{ '${{ github.job }}' }}* of the workflow *${{ '${{ github.workflow }}' }}* failed.",
-            "attachments": [
-              {
-                "color": "#F44336",
-                "title": "${{ '${{ github.repository }}' }}",
-                "title_link": "${{ '${{ github.server_url }}' }}/${{ '${{ github.repository }}' }}/actions/runs/${{ '${{ github.run_id }}' }}",
-                "text": "The job *${{ '${{ github.job }}' }}* of the workflow *${{ '${{ github.workflow }}' }}* failed.",
-                "markdown_in": ["text"]
-              }
-            ]
-          }
     secrets:
       username:
         required: true
@@ -85,6 +68,18 @@ jobs:
         if: ${{ ! inputs.disable_slack && failure() }}
         with:
           channel-id: ${{ inputs.slack_channel_id }}
-          payload: ${{ inputs.slack_failure_payload }}
+          payload: |
+            {
+              "text": "*${{ github.repository }}*: The job *${{ github.job }}* of the workflow *${{ github.workflow }}* failed.",
+              "attachments": [
+                {
+                  "color": "#F44336",
+                  "title": "${{ github.repository }}",
+                  "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                  "text": "The job *${{ github.job }}* of the workflow *${{ github.workflow }}* failed.",
+                  "markdown_in": ["text"]
+                }
+              ]
+            }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.slack_bot_token }}
