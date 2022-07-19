@@ -43,12 +43,24 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: echo "::set-output name=latest_tag::$(gh release list -L 1 | cut -f3)"
-      - name: Slack Notification
+      - name: Slack Failure Notification
         uses: slackapi/slack-github-action@v1.19.0
         if: ${{ ! inputs.disable_slack && failure() }}
         with:
-          channel-id: ${{ input.slack_channel_id }}
-          slack-message: "${{ github.workflow }}\nFAILED: ${{ github.job }}\nSee: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          channel-id: ${{ inputs.slack_channel_id }}
+          payload: |
+            {
+              "text": "*${{ github.repository }}*: The job *${{ github.job }}* of the workflow *${{ github.workflow }}* failed.",
+              "attachments": [
+                {
+                  "color": "#F44336",
+                  "title": "${{ github.repository }}",
+                  "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                  "text": "The job *${{ github.job }}* of the workflow *${{ github.workflow }}* failed.",
+                  "markdown_in": ["text"]
+                }
+              ]
+            }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.slack_bot_token }}
   increment-tag-version:
@@ -69,11 +81,23 @@ jobs:
       - name: Increment tag version number
         id: new_tag_name
         run: echo "::set-output name=new_tag_name::$(echo "${{ needs.get-latest-tag.outputs.latest_tag }}" | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')"
-      - name: Slack Notification
+      - name: Slack Failure Notification
         uses: slackapi/slack-github-action@v1.19.0
         if: ${{ ! inputs.disable_slack && failure() }}
         with:
-          channel-id: ${{ input.slack_channel_id }}
-          slack-message: "${{ github.workflow }}\nFAILED: ${{ github.job }}\nSee: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          channel-id: ${{ inputs.slack_channel_id }}
+          payload: |
+            {
+              "text": "*${{ github.repository }}*: The job *${{ github.job }}* of the workflow *${{ github.workflow }}* failed.",
+              "attachments": [
+                {
+                  "color": "#F44336",
+                  "title": "${{ github.repository }}",
+                  "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                  "text": "The job *${{ github.job }}* of the workflow *${{ github.workflow }}* failed.",
+                  "markdown_in": ["text"]
+                }
+              ]
+            }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.slack_bot_token }}

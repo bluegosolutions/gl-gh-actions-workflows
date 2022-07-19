@@ -32,11 +32,23 @@ jobs:
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GITHUB_TOKEN: ${{ secrets.ext_github_token }}
-      - name: Slack Notification
+      - name: Slack Failure Notification
         uses: slackapi/slack-github-action@v1.19.0
         if: ${{ ! inputs.disable_slack && failure() }}
         with:
-          channel-id: ${{ input.slack_channel_id }}
-          slack-message: "${{ github.workflow }}\nFAILED: ${{ github.job }}\nSee: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          channel-id: ${{ inputs.slack_channel_id }}
+          payload: |
+            {
+              "text": "*${{ github.repository }}*: The job *${{ github.job }}* of the workflow *${{ github.workflow }}* failed.",
+              "attachments": [
+                {
+                  "color": "#F44336",
+                  "title": "${{ github.repository }}",
+                  "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                  "text": "The job *${{ github.job }}* of the workflow *${{ github.workflow }}* failed.",
+                  "markdown_in": ["text"]
+                }
+              ]
+            }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.slack_bot_token }}
