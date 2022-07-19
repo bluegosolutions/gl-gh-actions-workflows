@@ -17,28 +17,3 @@ jobs:
         uses: actions/checkout@v3
       - name: Run image scan
         run: exit 1
-  slack-failure-notification:
-    name: Slack Failure Notification
-    runs-on: ubuntu-20.04
-    needs: [get-latest-tag, scan]
-    if: ${{ ! inputs.disable_slack && failure() }}
-    steps:
-      - name: Slack Notification
-        uses: slackapi/slack-github-action@v1.19.0
-        with:
-          channel-id: "C03PH5M17KR"
-          payload: |
-            {
-              "text": "*${{ github.repository }}*: The job *${{ github.job }}* of the workflow *${{ github.workflow }}* failed.",
-              "attachments": [
-                {
-                  "color": "#F44336",
-                  "title": "${{ github.repository }}",
-                  "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-                  "text": "The job *${{ github.job }}* of the workflow *${{ github.workflow }}* failed.",
-                  "markdown_in": ["text"]
-                }
-              ]
-            }
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN_GITHUB_ACTIONS }}
