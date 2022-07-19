@@ -28,13 +28,13 @@ on:
         description: The failure payload used to send as slack message describing this workflow's status.
         default: |
           {
-            "text": "*${{ github.repository }}*: The job *${{ github.job }}* of the workflow *${{ github.workflow }}* failed.",
+            "text": "*\${{ github.repository }}*: The job *\${{ github.job }}* of the workflow *\${{ github.workflow }}* failed.",
             "attachments": [
               {
                 "color": "#F44336",
-                "title": "${{ github.repository }}",
-                "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-                "text": "The job *${{ github.job }}* of the workflow *${{ github.workflow }}* failed.",
+                "title": "\${{ github.repository }}",
+                "title_link": "\${{ github.server_url }}/\${{ github.repository }}/actions/runs/\${{ github.run_id }}",
+                "text": "The job *\${{ github.job }}* of the workflow *\${{ github.workflow }}* failed.",
                 "markdown_in": ["text"]
               }
             ]
