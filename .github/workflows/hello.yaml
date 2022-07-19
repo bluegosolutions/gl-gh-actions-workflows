@@ -3,14 +3,11 @@ on:
   push: {}
 jobs:
   get-latest-tag:
-    name: Get latest tag
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-      - name: Get latest tag
-        id: get_latest_tag
-        run: exit 1
+    uses: ./.github/workflows/test.yaml
+    secrets:
+      username: ${{ secrets.IMAGE_GITHUB_USERNAME }}
+      password: ${{ secrets.IMAGE_GITHUB_PASSWORD }}
+      slack_bot_token: ${{ secrets.SLACK_BOT_TOKEN_GITHUB_ACTIONS }}
   scan:
     name: Scan
     runs-on: ubuntu-20.04
@@ -20,8 +17,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Run image scan
         run: exit 1
-  slack-notification:
-    name: Slack Notification
+  slack-failure-notification:
+    name: Slack Failure Notification
     runs-on: ubuntu-20.04
     needs: [get-latest-tag, scan]
     if: ${{ ! inputs.disable_slack && failure() }}
