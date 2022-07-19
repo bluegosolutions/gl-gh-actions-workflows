@@ -10,7 +10,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Get latest tag
         id: get_latest_tag
-        run: echo ${{ github.job }}
+        run: exit 1
   scan:
     name: Scan
     runs-on: ubuntu-20.04
@@ -28,7 +28,6 @@ jobs:
     steps:
       - name: Slack Notification
         uses: slackapi/slack-github-action@v1.19.0
-        if: ${{ ! inputs.disable_slack && failure() }}
         with:
           channel-id: "C03PH5M17KR"
           payload: |
