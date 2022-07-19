@@ -1,0 +1,49 @@
+name: Hello
+on:
+  push: {}
+jobs:
+  get-latest-tag:
+    name: Get latest tag
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Get latest tag
+        id: get_latest_tag
+        run: echo ${{ github.job }}
+      - name: Slack Notification
+        uses: slackapi/slack-github-action@v1.19.0
+        if: ${{ ! inputs.disable_slack }} && {{ failure() }}
+        with:
+          channel-id: "C03PH5M17KR"
+          payload: |
+            {
+              "text": "The job ${{ github.job }} of the workflow ${{ github.workflow }} failed.",
+              "attachments": [
+                {
+                  "color": "#F44336",
+                  "title": "${{ github.repository }}",
+                  "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                  "text": "The job ${{ github.job }} of the workflow ${{ github.workflow }} failed."
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN_GITHUB_ACTIONS }}
+  scan:
+    name: Scan
+    runs-on: ubuntu-20.04
+    needs: [ get-latest-tag ]
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Run image scan
+        run: exit 1
+      - name: Slack Notification
+        uses: slackapi/slack-github-action@v1.19.0
+        if: ${{ ! inputs.disable_slack }} && {{ failure() }}
+        with:
+          channel-id: "C03PH5M17KR"
+          slack-message: "${{ github.workflow }}\nFAILED: ${{ github.job }}\nSee: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN_GITHUB_ACTIONS }}
