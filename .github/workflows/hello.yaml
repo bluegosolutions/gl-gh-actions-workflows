@@ -21,8 +21,9 @@ jobs:
       - name: Run image scan
         run: exit 1
   slack-notification:
-    name: Scan
+    name: Slack Notification
     runs-on: ubuntu-20.04
+    needs: [get-latest-tag, scan]
     if: ${{ ! inputs.disable_slack && failure() }}
     steps:
       - name: Slack Notification
