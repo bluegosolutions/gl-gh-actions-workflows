@@ -18,7 +18,7 @@ jobs:
           channel-id: "C03PH5M17KR"
           slack-message: "${{ github.workflow }}\nFAILED: ${{ github.job }}\nSee: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         env:
-          SLACK_BOT_TOKEN: ${{ secrets.slack_bot_token }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN_GITHUB_ACTIONS }}
   scan:
     name: Scan
     runs-on: ubuntu-20.04
@@ -35,4 +35,4 @@ jobs:
           channel-id: "C03PH5M17KR"
           slack-message: "${{ github.workflow }}\nFAILED: ${{ github.job }}\nSee: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         env:
-          SLACK_BOT_TOKEN: ${{ secrets.slack_bot_token }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN_GITHUB_ACTIONS }}
