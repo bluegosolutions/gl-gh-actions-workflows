@@ -32,8 +32,8 @@ jobs:
       - name: Create github release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ input.tag_name }}
-          target_commitish: ${{ input.target_commit_hash }}
+          tag_name: ${{ inputs.tag_name }}
+          target_commitish: ${{ inputs.target_commit_hash }}
           generate_release_notes: true
       - name: Slack Failure Notification
         uses: slackapi/slack-github-action@v1.19.0
