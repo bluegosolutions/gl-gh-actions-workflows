@@ -36,7 +36,7 @@ jobs:
           target_commitish: ${{ inputs.target_commit_hash }}
           generate_release_notes: true
       - name: Slack Failure Notification
-        uses: slackapi/slack-github-action@v1.19.0
+        uses: slackapi/slack-github-action@v1.21.0
         if: ${{ ! inputs.disable_slack && failure() }}
         with:
           channel-id: ${{ inputs.slack_channel_id }}
